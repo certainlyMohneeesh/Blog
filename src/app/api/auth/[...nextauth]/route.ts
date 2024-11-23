@@ -3,8 +3,6 @@ import GithubProvider from "next-auth/providers/github";
 import prisma from "@/lib/db";
 import { GitHubProfile } from "@/types";
 
-const ALLOWED_GITHUB_USER = "certainlymohneesh";
-
 export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({

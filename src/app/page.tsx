@@ -31,9 +31,9 @@ export default async function HomePage() {
       <AnimatedSection>
         <section className="h-[80vh] flex items-center justify-center">
           <div className="text-center">
-          <SlideUp>
-            <h1 className="text-6xl font-bold mb-4">Welcome to My Blog</h1>
-            <p className="text-xl text-gray-600 mb-8">Sharing thoughts and experiences</p>
+            <SlideUp>
+              <h1 className="text-6xl font-bold mb-4">Welcome to My Blog</h1>
+              <p className="text-xl text-gray-600 mb-8">Sharing thoughts and experiences</p>
             </SlideUp>
             <Button asChild>
               <Link href="/blogs">View All Posts</Link>
@@ -47,7 +47,7 @@ export default async function HomePage() {
           <h2 className="text-4xl font-bold mb-12 text-center">Featured Posts</h2>
           {featuredPosts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {featuredPosts.map((post, index) => (
+              {featuredPosts.map((post) => (
                 <AnimatedSection key={post.id}>
                   <Card className="p-6 hover:shadow-lg transition-shadow">
                     <h3 className="text-2xl font-bold mb-4">{post.title}</h3>
