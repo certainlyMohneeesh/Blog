@@ -36,28 +36,22 @@ export default function Header() {
             </Link>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center gap-4">
-            <Button variant="ghost" asChild className="w-full md:w-auto">
+          <div className="flex flex-row items-center gap-2">
+            <Button variant="ghost" asChild size="sm">
               <Link href="/blogs">All Posts</Link>
             </Button>
 
             {session ? (
-              <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
-                <Button variant="outline" asChild className="w-full md:w-auto">
+              <div className="flex flex-row gap-2">
+                <Button variant="outline" asChild size="sm">
                   <Link href="/admin/new">New Post</Link>
                 </Button>
-                <Button 
-                  onClick={() => signOut()} 
-                  className="w-full md:w-auto"
-                >
+                <Button size="sm" onClick={() => signOut()}>
                   Sign Out
                 </Button>
               </div>
             ) : (
-              <Button 
-                onClick={() => signIn()} 
-                className="w-full md:w-auto"
-              >
+              <Button size="sm" onClick={() => signIn()}>
                 Sign In
               </Button>
             )}
