@@ -9,14 +9,12 @@ export const metadata = {
   description: 'A personal blog built with Next.js and shadcn components',
   keywords: ['blog', 'nextjs', 'react', 'web development'],
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/favicon.png',
-    other: {
-      rel: 'apple-touch-icon-precomposed',
-      url: '/favicon.png',
-    },
-  },
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png' }
+    ],
+    apple: { url: '/apple-touch-icon.png' }
+  }
 }
 
 export default function RootLayout({
