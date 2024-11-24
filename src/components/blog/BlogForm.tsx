@@ -97,7 +97,9 @@ export default function BlogForm({ initialData, isEditing }: BlogFormProps) {
       animate={{ opacity: 1, y: 0 }}
       className="max-w-4xl mx-auto p-6"
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="w-full max-w-4xl mx-auto px-4">
+      <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <label htmlFor="title" className="text-lg font-medium">
             Blog Title
@@ -145,16 +147,18 @@ export default function BlogForm({ initialData, isEditing }: BlogFormProps) {
               isEditing ? 'Update Post' : 'Publish Post'
             )}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => router.back()}
-            disabled={isLoading}
-          >
-            Cancel
-          </Button>
+            <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.back()}
+                disabled={isLoading}
+              >
+                Cancel
+            </Button>
+          </div>
         </div>
       </form>
+      </div>
     </motion.div>
   );
 }

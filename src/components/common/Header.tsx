@@ -14,8 +14,11 @@ export default function Header() {
       animate={{ y: 0 }}
       className="py-4 px-8 bg-white shadow-md"
     >
-      <nav className="container mx-auto flex justify-between items-center">
+      <nav className="flex flex-col sm:flex-row justify-between items-center p-4">
+      <div className="w-full sm:w-auto mb-4 sm:mb-0">
         <Link href="/" className="text-2xl font-bold">MyBlog</Link>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4">
         <div className="space-x-4">
           <Button variant="ghost" asChild>
             <Link href="/blogs">All Posts</Link>
@@ -30,6 +33,7 @@ export default function Header() {
           ) : (
             <Button onClick={() => signIn()}>Sign In</Button>
           )}
+        </div>
         </div>
       </nav>
     </motion.header>

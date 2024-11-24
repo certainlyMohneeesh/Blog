@@ -42,11 +42,11 @@ export default async function HomePage() {
         </section>
       </AnimatedSection>
 
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 space-y-8 md:space-y-12">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold mb-12 text-center">Featured Posts</h2>
           {featuredPosts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredPosts.map((post) => (
                 <AnimatedSection key={post.id}>
                   <Card className="p-6 hover:shadow-lg transition-shadow">

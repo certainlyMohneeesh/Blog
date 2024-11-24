@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { FadeIn } from "@/components/animations/FadeIn";
+import { motion } from "framer-motion";
 
 interface BlogCardProps {
   post: {
@@ -23,6 +24,8 @@ export default function BlogCard({ post }: BlogCardProps) {
   const { data: session } = useSession();
 
   return (
+    <div className="w-full md:w-1/2 lg:w-1/3 p-4">
+    <motion.div className="h-full rounded-lg shadow-md hover:shadow-xl transition-shadow"> 
     <FadeIn>
       <Card className="p-6 h-full flex flex-col">
         <div className="flex-grow">
@@ -53,5 +56,7 @@ export default function BlogCard({ post }: BlogCardProps) {
         </div>
       </Card>
     </FadeIn>
+    </motion.div>
+    </div>
   );
 }
