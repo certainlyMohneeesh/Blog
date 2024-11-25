@@ -27,7 +27,7 @@ useEffect(() => {
       setShowAuth(true)
     }
     // To deactivate press Esc + Alt
-    if (e.key === 'Escape' && e.altKey) {
+    if (e.key === 'Escape' && e.shiftKey) {
       window.alert('🔒 Admin Mode Deactivated!')
       setShowAuth(false)
     }
