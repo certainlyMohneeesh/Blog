@@ -26,7 +26,7 @@ useEffect(() => {
       window.alert('🔓 Admin Mode Activated!')
       setShowAuth(true)
     }
-    if (e.key === 'Escape') {
+    if (e.key === 'Escape' && e.altKey) {
       window.alert('🔒 Admin Mode Deactivated!')
       setShowAuth(false)
     }
