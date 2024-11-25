@@ -1,4 +1,5 @@
 import prisma from "@/lib/db";
+import { GetServerSideProps } from "next";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import AnimatedSection from "@/components/animations/AnimatedSection";
@@ -10,32 +11,32 @@ interface HomePageProps {
   featuredPosts: Post[];
 }
 // Switched to SSR for fetching posts at every request for dynamic content
-export async function getServerSideProps() {
-  const featuredPosts = await prisma.post.findMany({ 
+export const getServerSideProps: GetServerSideProps = async () => {
+  const featuredPosts = await prisma.post.findMany({
     where: {
-      published: true, // Only fetch published posts
-      featured: true, // Only fetch featured posts
+      published: true,
+      featured: true,
     },
     take: 3,
     orderBy: {
-      createdAt: 'desc'
+      createdAt: 'desc',
     },
     include: {
       author: {
         select: {
           name: true,
-          image: true
-        }
-      }
-    }
+          image: true,
+        },
+      },
+    },
   });
 
   return {
     props: {
-      featuredPosts
-    }
+      featuredPosts,
+    },
   };
-}
+};
 
 export default function HomePage({ featuredPosts }: HomePageProps) {
   return (
