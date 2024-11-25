@@ -1,22 +1,23 @@
-import { Post } from "@/types";
 import prisma from "@/lib/db";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import AnimatedSection from "@/components/animations/AnimatedSection";
 import { SlideUp } from "@/components/animations/SlideUp";
+import BlogCard from "@/components/blog/BlogCard";
 
-async function getFeaturedPosts(): Promise<Post[]> {
+async function getFeaturedPosts() {
   const posts = await prisma.post.findMany({
     take: 3,
     orderBy: {
       createdAt: 'desc'
     },
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      createdAt: true
+    include: {
+      author: {
+        select: {
+          name: true,
+          image: true
+        }
+      }
     }
   });
 
@@ -42,28 +43,13 @@ export default async function HomePage() {
         </section>
       </AnimatedSection>
 
-      <section className="py-20 bg-gray-50 space-y-8 md:space-y-12">
-        <div className="container mx-auto">
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold mb-12 text-center">Featured Posts</h2>
           {featuredPosts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredPosts.map((post) => (
-                <AnimatedSection key={post.id}>
-                  <Card className="p-6 hover:shadow-lg transition-shadow">
-                    <h3 className="text-2xl font-bold mb-4">{post.title}</h3>
-                    <p className="text-gray-600 mb-4">
-                      {post.content.substring(0, 150)}...
-                    </p>
-                    <div className="flex justify-between items-center">
-                      <Button variant="outline" asChild>
-                        <Link href={`/blog/${post.id}`}>Read More</Link>
-                      </Button>
-                      <span className="text-sm text-gray-500">
-                        {new Date(post.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </Card>
-                </AnimatedSection>
+                <BlogCard key={post.id} post={post} />
               ))}
             </div>
           ) : (
