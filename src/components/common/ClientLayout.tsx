@@ -14,6 +14,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 // Secret key combination handler
 useEffect(() => {
   function handleKeyPress(e: KeyboardEvent) {
+    console.log('Key pressed:', e.key, 'Ctrl:', e.ctrlKey, 'Alt:', e.altKey)
       // Show auth when pressing 'Ctrl + Alt + A'
       if (e.ctrlKey && e.altKey && (e.key === 'a' || e.key === 'A')) {
         window.alert('🔓 Admin Mode Activated!')
@@ -26,8 +27,8 @@ useEffect(() => {
       }
     }
 
-    document.addEventListener('keydown', handleKeyPress)
-    return () => document.removeEventListener('keydown', handleKeyPress)
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
   }, [setShowAuth])
 
   return (
