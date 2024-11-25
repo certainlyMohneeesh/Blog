@@ -7,26 +7,30 @@ import BlogCard from "@/components/blog/BlogCard";
 import { Post } from "@/types";
 
 async function getFeaturedPosts() {
-  const posts = await prisma.post.findMany({
-    where: {
-      published: true,
-      featured: true,
-    },
-    take: 3,
-    orderBy: {
-      createdAt: "desc",
-    },
-    include: {
-      author: {
-        select: {
-          name: true,
-          image: true,
+  try {
+    const posts = await prisma.post.findMany({
+      where: {
+        published: true,
+        featured: true,
+      },
+      take: 3,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        author: {
+          select: {
+            name: true,
+            image: true,
+          },
         },
       },
-    },
-  });
-
-  return posts;
+    });
+    return posts;
+  } catch (error) {
+    console.error("Failed to fetch featured posts:", error);
+    return [];
+  }
 }
 
 
