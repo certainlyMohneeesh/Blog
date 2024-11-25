@@ -10,8 +10,7 @@ import { Post } from "@/types";
 interface HomePageProps {
   featuredPosts: Post[];
 }
-// Switched to SSR for fetching posts at every request for dynamic content
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps = async () => {
   const featuredPosts = await prisma.post.findMany({
     where: {
       published: true,
@@ -35,6 +34,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     props: {
       featuredPosts,
     },
+    revalidate: 60, // Revalidate every 60 seconds
   };
 };
 
