@@ -1,5 +1,4 @@
 import prisma from "@/lib/db";
-import { GetServerSideProps } from "next";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import AnimatedSection from "@/components/animations/AnimatedSection";
@@ -7,18 +6,15 @@ import { SlideUp } from "@/components/animations/SlideUp";
 import BlogCard from "@/components/blog/BlogCard";
 import { Post } from "@/types";
 
-interface HomePageProps {
-  featuredPosts: Post[];
-}
-export const getStaticProps = async () => {
-  const featuredPosts = await prisma.post.findMany({
+async function getFeaturedPosts() {
+  const posts = await prisma.post.findMany({
     where: {
       published: true,
       featured: true,
     },
     take: 3,
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
     include: {
       author: {
@@ -30,15 +26,13 @@ export const getStaticProps = async () => {
     },
   });
 
-  return {
-    props: {
-      featuredPosts,
-    },
-    revalidate: 60, // Revalidate every 60 seconds
-  };
-};
+  return posts;
+}
 
-export default function HomePage({ featuredPosts }: HomePageProps) {
+
+export default async function HomePage() {
+  // Fetch data directly within the component
+  const featuredPosts = await getFeaturedPosts();
   return (
     <div className="min-h-screen">
       <AnimatedSection>
