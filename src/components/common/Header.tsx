@@ -11,6 +11,25 @@ import { useEffect, useState } from "react";
 export default function Header() {
   const { data: session } = useSession();
   const [scrolled, setScrolled] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+  
+  // Secret key combination handler
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Show auth when pressing 'Ctrl + Alt + A'
+      if (event.ctrlKey && event.altKey && event.key === 'a') {
+        setShowAuth(true);
+      }
+      // Hide auth when pressing 'Escape'
+      if (event.key === 'Escape') {
+        setShowAuth(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,7 +59,9 @@ export default function Header() {
             <Button variant="ghost" asChild size="sm">
               <Link href="/blogs">All Posts</Link>
             </Button>
-
+             
+        {(session || showAuth) && (
+          <>
             {session ? (
               <div className="flex flex-row gap-2">
                 <Button variant="outline" asChild size="sm">
@@ -55,6 +76,8 @@ export default function Header() {
                 Sign In
               </Button>
             )}
+            </>
+          )}
           </div>
         </nav>
       </div>
