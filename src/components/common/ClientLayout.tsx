@@ -16,12 +16,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     const handleKeyPress = (event: KeyboardEvent) => {
       // Show auth when pressing 'Ctrl + Alt + A'
       if (event.ctrlKey && event.altKey && event.key === 'a') {
-        console.log('Auth triggered!') // Debug log
+        alert('Auth mode activated!')
         setShowAuth(true)
       }
       // Hide auth when pressing 'Escape'
       if (event.key === 'Escape') {
         setShowAuth(false)
+        alert('Auth mode deactivated!')
       }
     }
 
