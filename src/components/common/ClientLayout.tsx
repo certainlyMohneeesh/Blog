@@ -14,8 +14,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 // Secret key combination handler
 useEffect(() => {
   function handleKeyPress(e: KeyboardEvent) {
-    console.log('Key pressed:', e.key, 'Ctrl:', e.ctrlKey, 'Alt:', e.altKey)
-
+    
+    // Press Ctrl + Alt or Alt + A to enter secret mode
     // Check for Control key specifically
     if (e.key === 'Control' && e.altKey) {
       window.alert('🔓 Admin Mode Activated!')
@@ -26,6 +26,7 @@ useEffect(() => {
       window.alert('🔓 Admin Mode Activated!')
       setShowAuth(true)
     }
+    // To deactivate press Esc + Alt
     if (e.key === 'Escape' && e.altKey) {
       window.alert('🔒 Admin Mode Deactivated!')
       setShowAuth(false)
