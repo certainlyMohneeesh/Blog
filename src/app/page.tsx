@@ -4,9 +4,18 @@ import Link from "next/link";
 import AnimatedSection from "@/components/animations/AnimatedSection";
 import { SlideUp } from "@/components/animations/SlideUp";
 import BlogCard from "@/components/blog/BlogCard";
+import { Post } from "@/types";
 
-async function getFeaturedPosts() {
-  const posts = await prisma.post.findMany({
+interface HomePageProps {
+  featuredPosts: Post[];
+}
+// Switched to SSR for fetching posts at every request for dynamic content
+export async function getServerSideProps() {
+  const featuredPosts = await prisma.post.findMany({ 
+    where: {
+      published: true, // Only fetch published posts
+      featured: true, // Only fetch featured posts
+    },
     take: 3,
     orderBy: {
       createdAt: 'desc'
@@ -21,12 +30,14 @@ async function getFeaturedPosts() {
     }
   });
 
-  return posts;
+  return {
+    props: {
+      featuredPosts
+    }
+  };
 }
 
-export default async function HomePage() {
-  const featuredPosts = await getFeaturedPosts();
-
+export default function HomePage({ featuredPosts }: HomePageProps) {
   return (
     <div className="min-h-screen">
       <AnimatedSection>
@@ -48,7 +59,7 @@ export default async function HomePage() {
           <h2 className="text-4xl font-bold mb-12 text-center">Featured Posts</h2>
           {featuredPosts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredPosts.map((post) => (
+              {featuredPosts.map((post: Post) => (
                 <BlogCard key={post.id} post={post} />
               ))}
             </div>
@@ -72,3 +83,4 @@ export default async function HomePage() {
     </div>
   );
 }
+

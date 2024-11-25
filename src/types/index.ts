@@ -1,9 +1,18 @@
+
+interface Author {
+  name: string | null; // Since `name` can be nullable in your schema
+  image: string | null;
+}
+
 export interface Post {
     id: string;
     title: string;
     content: string;
     createdAt: Date;
     authorId?: string;
+    published: boolean;
+    featured: boolean;
+    author: Author;
   }
 
    export interface GitHubProfile {
