@@ -15,17 +15,22 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 useEffect(() => {
   function handleKeyPress(e: KeyboardEvent) {
     console.log('Key pressed:', e.key, 'Ctrl:', e.ctrlKey, 'Alt:', e.altKey)
-      // Show auth when pressing 'Ctrl + Alt + A'
-      if (e.ctrlKey && e.altKey && (e.key === 'a' || e.key === 'A')) {
-        window.alert('🔓 Admin Mode Activated!')
-        setShowAuth(true)
-      }
-      // Hide auth when pressing 'Escape'
-      if (e.key === 'Escape') {
-        window.alert('🔒 Admin Mode Deactivated!')
-        setShowAuth(false)
-      }
+
+    // Check for Control key specifically
+    if (e.key === 'Control' && e.altKey) {
+      window.alert('🔓 Admin Mode Activated!')
+      setShowAuth(true)
     }
+    // Alternative combination using just Alt + A
+    if (e.altKey && (e.key === 'a' || e.key === 'A')) {
+      window.alert('🔓 Admin Mode Activated!')
+      setShowAuth(true)
+    }
+    if (e.key === 'Escape') {
+      window.alert('🔒 Admin Mode Deactivated!')
+      setShowAuth(false)
+    }
+  }
 
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
