@@ -5,30 +5,30 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { HeaderProps } from "@/types";
 
 
 
-export default function Header() {
+export default function Header({ showAuth }: HeaderProps) {
   const { data: session } = useSession();
   const [scrolled, setScrolled] = useState(false);
-  const [showAuth, setShowAuth] = useState(false);
   
-  // Secret key combination handler
-  useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      // Show auth when pressing 'Ctrl + Alt + A'
-      if (event.ctrlKey && event.altKey && event.key === 'a') {
-        setShowAuth(true);
-      }
-      // Hide auth when pressing 'Escape'
-      if (event.key === 'Escape') {
-        setShowAuth(false);
-      }
-    };
+  // // Secret key combination handler
+  // useEffect(() => {
+  //   const handleKeyPress = (event: KeyboardEvent) => {
+  //     // Show auth when pressing 'Ctrl + Alt + A'
+  //     if (event.ctrlKey && event.altKey && event.key === 'a') {
+  //       setShowAuth(true);
+  //     }
+  //     // Hide auth when pressing 'Escape'
+  //     if (event.key === 'Escape') {
+  //       setShowAuth(false);
+  //     }
+  //   };
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, []);
+  //   window.addEventListener('keydown', handleKeyPress);
+  //   return () => window.removeEventListener('keydown', handleKeyPress);
+  // }, []);
 
 
   useEffect(() => {

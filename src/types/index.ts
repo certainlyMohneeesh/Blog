@@ -21,3 +21,7 @@ export interface Post {
     };
     isEditing?: boolean;
   }
+
+  export interface HeaderProps {
+    showAuth: boolean;
+  }
