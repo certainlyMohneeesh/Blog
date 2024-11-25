@@ -12,22 +12,22 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const setShowAuth = useAuthStore((state) => state.setShowAuth)
 
 // Secret key combination handler
-  useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
+useEffect(() => {
+  function handleKeyPress(e: KeyboardEvent) {
       // Show auth when pressing 'Ctrl + Alt + A'
-      if (event.ctrlKey && event.altKey && event.key === 'a') {
-        alert('Auth mode activated!')
+      if (e.ctrlKey && e.altKey && (e.key === 'a' || e.key === 'A')) {
+        window.alert('🔓 Admin Mode Activated!')
         setShowAuth(true)
       }
       // Hide auth when pressing 'Escape'
-      if (event.key === 'Escape') {
+      if (e.key === 'Escape') {
+        window.alert('🔒 Admin Mode Deactivated!')
         setShowAuth(false)
-        alert('Auth mode deactivated!')
       }
     }
 
-    window.addEventListener('keydown', handleKeyPress)
-    return () => window.removeEventListener('keydown', handleKeyPress)
+    document.addEventListener('keydown', handleKeyPress)
+    return () => document.removeEventListener('keydown', handleKeyPress)
   }, [setShowAuth])
 
   return (
