@@ -1,5 +1,5 @@
 "use client";
-
+import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -77,7 +77,7 @@ export default function BlogContent({ post }: BlogContentProps) {
       </div>
 
       <div className="prose max-w-none mb-8">
-        {post.content}
+      <ReactMarkdown>{post.content}</ReactMarkdown>
       </div>
 
       {session && (
