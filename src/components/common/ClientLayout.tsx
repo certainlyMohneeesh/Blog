@@ -6,36 +6,32 @@ import Footer from "@/components/common/Footer";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/ui/toaster";
 import { useEffect, useState } from "react";
+import { useAuthStore } from '@/store/authStore'
 
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
+  const setShowAuth = useAuthStore((state) => state.setShowAuth)
 
-export default function ClientLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [showAuth, setShowAuth] = useState(false);
-
-  // Secret key combination handler
+// Secret key combination handler
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       // Show auth when pressing 'Ctrl + Alt + A'
       if (event.ctrlKey && event.altKey && event.key === 'a') {
-        setShowAuth(true);
+        setShowAuth(true)
       }
       // Hide auth when pressing 'Escape'
       if (event.key === 'Escape') {
-        setShowAuth(false);
+        setShowAuth(false)
       }
-    };
+    }
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, []);
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [setShowAuth])
 
   return (
     <SessionProvider>
       <div className="min-h-screen flex flex-col">
-        <Header showAuth={showAuth} />
+        <Header/>
         <AnimatePresence mode="wait">
           <motion.main 
             initial={{ opacity: 0, y: 20 }}

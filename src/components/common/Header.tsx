@@ -5,13 +5,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { HeaderProps } from "@/types";
+import { useAuthStore } from '@/store/authStore'
 
-
-
-export default function Header({ showAuth }: HeaderProps) {
+export default function Header() {
   const { data: session } = useSession();
   const [scrolled, setScrolled] = useState(false);
+  const showAuth = useAuthStore((state) => state.showAuth)
   
   // // Secret key combination handler
   // useEffect(() => {
