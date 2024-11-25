@@ -11,24 +11,6 @@ export default function Header() {
   const { data: session } = useSession();
   const [scrolled, setScrolled] = useState(false);
   const showAuth = useAuthStore((state) => state.showAuth)
-  
-  // // Secret key combination handler
-  // useEffect(() => {
-  //   const handleKeyPress = (event: KeyboardEvent) => {
-  //     // Show auth when pressing 'Ctrl + Alt + A'
-  //     if (event.ctrlKey && event.altKey && event.key === 'a') {
-  //       setShowAuth(true);
-  //     }
-  //     // Hide auth when pressing 'Escape'
-  //     if (event.key === 'Escape') {
-  //       setShowAuth(false);
-  //     }
-  //   };
-
-  //   window.addEventListener('keydown', handleKeyPress);
-  //   return () => window.removeEventListener('keydown', handleKeyPress);
-  // }, []);
-
 
   useEffect(() => {
     const handleScroll = () => {
