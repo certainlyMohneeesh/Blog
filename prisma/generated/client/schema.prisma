@@ -18,6 +18,8 @@ model Post {
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String   @db.ObjectId
   featured  Boolean  @default(false)
+  views     Int      @default(0) // Track post views
+  likes     Int      @default(0) // Track likes
 }
 
 model User {

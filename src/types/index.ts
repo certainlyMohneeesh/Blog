@@ -12,6 +12,8 @@ export interface Post {
     authorId?: string;
     published: boolean;
     featured: boolean;
+    views: number;
+    likes: number;
     author: Author;
   }
 

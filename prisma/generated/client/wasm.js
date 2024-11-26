@@ -123,7 +123,9 @@ exports.Prisma.PostScalarFieldEnum = {
   updatedAt: 'updatedAt',
   published: 'published',
   authorId: 'authorId',
-  featured: 'featured'
+  featured: 'featured',
+  views: 'views',
+  likes: 'likes'
 };
 
 exports.Prisma.UserScalarFieldEnum = {

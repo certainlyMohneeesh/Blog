@@ -5,8 +5,11 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { FadeIn } from "@/components/animations/FadeIn";
 import { motion } from "framer-motion";
+import { ThumbsUp } from "lucide-react";
 
 interface BlogCardProps {
+  views: number;
+  likes: number;
   post: {
     id: string;
     title: string;
@@ -19,7 +22,7 @@ interface BlogCardProps {
   };
 }
 
-export default function BlogCard({ post }: BlogCardProps) {
+export default function BlogCard({ post, views, likes }: BlogCardProps) {
   return (
     <div className="w-full p-2 sm:p-4">
       <motion.div className="h-full rounded-lg shadow-md hover:shadow-xl transition-shadow">
@@ -43,6 +46,15 @@ export default function BlogCard({ post }: BlogCardProps) {
                 {post.content.substring(0, 150)}...
               </p>
             </div>
+
+            <div className="meta flex items-center gap-4 mt-4">
+              <span>{views} views</span>
+              <div className="flex items-center gap-1">
+                <ThumbsUp className="w-4 h-4 text-gray-500" />
+                <span>{likes}</span>
+              </div>
+            </div>
+
             <div className="flex justify-between items-center mt-4">
               <Button variant="outline" size="sm" className="text-sm sm:text-base" asChild>
                 <Link href={`/blog/${post.id}`}>Read More</Link>
