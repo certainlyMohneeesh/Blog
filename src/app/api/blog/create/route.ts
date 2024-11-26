@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
+import { revalidatePath } from 'next/cache';
 
 export async function POST(request: Request) {
   try {
@@ -53,5 +54,8 @@ export async function POST(request: Request) {
       { success: false, message: "Failed to create post" },
       { status: 500 }
     );
+  }
+  finally {
+    revalidatePath('/');
   }
 }

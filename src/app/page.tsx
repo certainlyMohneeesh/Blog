@@ -5,11 +5,7 @@ import AnimatedSection from "@/components/animations/AnimatedSection";
 import { SlideUp } from "@/components/animations/SlideUp";
 import BlogCard from "@/components/blog/BlogCard";
 import { Post } from "@/types";
-// import { revalidatePath } from 'next/cache';
 
-// Add one of these two options:
-// export const revalidate = 0; // Disable caching for this page
-// OR
 export const dynamic = 'force-dynamic'; // Dynamically render on each request
 
 async function getFeaturedPosts() {
@@ -17,7 +13,6 @@ async function getFeaturedPosts() {
     const posts = await prisma.post.findMany({
       where: {
         published: true,
-        featured: true,
       },
       take: 3,
       orderBy: {

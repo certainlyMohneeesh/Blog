@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../auth/[...nextauth]/route";
+import { revalidatePath } from "next/cache";
 
 export async function PUT(
   request: Request,
@@ -58,6 +59,10 @@ export async function PUT(
       { message: "Failed to update post", error: "Unknown error occurred" },
       { status: 500 }
     );
+  }
+
+  finally {
+    revalidatePath("/");
   }
   
 }
