@@ -10,7 +10,8 @@ export default async function BlogPage({
   if (!params.id) {
     notFound();
   }
-
+  const views = 0; 
+  const likes = 0;
   const post = await prisma.post.findUnique({
     where: { 
       id: params.id 
@@ -35,5 +36,5 @@ export default async function BlogPage({
     }
   };
 
-  return <BlogContent post={formattedPost} />;
+  return <BlogContent post={formattedPost} views={views} likes={likes} />;
 }

@@ -68,7 +68,12 @@ export default async function HomePage() {
           {featuredPosts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredPosts.map((post: Post) => (
-                <BlogCard key={post.id} post={post} />
+                <BlogCard 
+                  key={post.id} 
+                  post={post} 
+                  views={0} // Default views if not fetched yet
+                  likes={0} // Default likes if not fetched yet
+                />
               ))}
             </div>
           ) : (

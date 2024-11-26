@@ -23,7 +23,12 @@ export default async function BlogsPage() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {posts.map((post) => (
-          <BlogCard key={post.id} post={post} />
+          <BlogCard 
+            key={post.id} 
+            post={post} 
+            views={0} // Default views if not fetched yet
+            likes={0} // Default likes if not fetched yet
+          />
         ))}
       </div>
     </div>
