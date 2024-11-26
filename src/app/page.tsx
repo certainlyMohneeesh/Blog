@@ -5,6 +5,12 @@ import AnimatedSection from "@/components/animations/AnimatedSection";
 import { SlideUp } from "@/components/animations/SlideUp";
 import BlogCard from "@/components/blog/BlogCard";
 import { Post } from "@/types";
+// import { revalidatePath } from 'next/cache';
+
+// Add one of these two options:
+export const revalidate = 0; // Disable caching for this page
+// OR
+// export const dynamic = 'force-dynamic'; // Dynamically render on each request
 
 async function getFeaturedPosts() {
   try {
@@ -41,6 +47,10 @@ async function getFeaturedPosts() {
 export default async function HomePage() {
   // Fetch data directly within the component
   const featuredPosts = await getFeaturedPosts();
+
+  console.log('Featured Posts Count:', featuredPosts.length);
+  console.log('Featured Posts Details:', JSON.stringify(featuredPosts, null, 2));
+
   return (
     <div className="min-h-screen">
       <AnimatedSection>
@@ -86,4 +96,3 @@ export default async function HomePage() {
     </div>
   );
 }
-
