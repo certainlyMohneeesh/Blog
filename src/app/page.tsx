@@ -26,6 +26,10 @@ async function getFeaturedPosts() {
         },
       },
     });
+
+        // Add logging to see exact posts
+        console.log('Featured Posts:', JSON.stringify(posts, null, 2));
+
     return posts;
   } catch (error) {
     console.error("Failed to fetch featured posts:", error);
