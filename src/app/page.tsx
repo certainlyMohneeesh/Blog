@@ -8,9 +8,9 @@ import { Post } from "@/types";
 // import { revalidatePath } from 'next/cache';
 
 // Add one of these two options:
-export const revalidate = 0; // Disable caching for this page
+// export const revalidate = 0; // Disable caching for this page
 // OR
-// export const dynamic = 'force-dynamic'; // Dynamically render on each request
+export const dynamic = 'force-dynamic'; // Dynamically render on each request
 
 async function getFeaturedPosts() {
   try {
