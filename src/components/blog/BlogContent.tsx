@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { ThumbsUp } from "lucide-react";
 import { useEffect, useState } from "react";
+import Editor from "../editor/editor";
+import { defaultEditorExtensions } from "@/components/editor/editor"; 
 
 interface BlogContentProps {
   views: number;
@@ -104,7 +106,7 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
       </div>
 
       <div className="prose max-w-none mb-8">
-      <ReactMarkdown>{post.content}</ReactMarkdown>
+      <Editor initialValue={JSON.parse(post.content)} readOnly={true} toolbar={false} onChange={() => {}} />
       </div>
 
       <div className="meta flex items-center gap-4 mt-4">
@@ -127,4 +129,5 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
       )}
     </motion.article>
   );
+
 }
