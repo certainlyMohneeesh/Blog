@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import ClientLayout from "@/components/common/ClientLayout";
 import "@/styles/globals.css";
-import "@/prosemirror.css";
+import "@/styles/prosemirror.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
