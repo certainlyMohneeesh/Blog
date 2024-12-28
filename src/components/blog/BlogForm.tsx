@@ -3,27 +3,29 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { BlogFormProps } from "@/types";
-import Editor from "../editor/editor";
+import ReactMarkdown from "react-markdown";
+// import Editor from "../editor/editor";
 
-export const defaultValue = {
-  type: 'doc',
-  content: [
-    {
-      type: 'paragraph',
-      content: []
-    }
-  ]
-}
+// export const defaultValue = {
+//   type: 'doc',
+//   content: [
+//     {
+//       type: 'paragraph',
+//       content: []
+//     }
+//   ]
+// }
 
 export default function BlogForm({ initialData, isEditing }: BlogFormProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [content, setContent] = useState<string>('')
+  // const [content, setContent] = useState<string>('')
   const [errors, setErrors] = useState({ title: "", content: "" });
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
@@ -39,7 +41,7 @@ export default function BlogForm({ initialData, isEditing }: BlogFormProps) {
       isValid = false;
     }
 
-    if (content.trim().length < 10) {
+    if (formData.content.trim().length < 10) {
       newErrors.content = "Content must be at least 10 characters long";
       isValid = false;
     }
@@ -65,7 +67,7 @@ export default function BlogForm({ initialData, isEditing }: BlogFormProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...formData, content }),
+        body: JSON.stringify(formData),
       });
   
       if (!response.ok) throw new Error("Failed to save blog post");
@@ -116,16 +118,47 @@ export default function BlogForm({ initialData, isEditing }: BlogFormProps) {
           )}
         </div>
 
-        <Editor 
-          initialValue={defaultValue} 
-          onChange={(updatedContent) => {
-            setContent(updatedContent);
-            setFormData((prev) => ({ ...prev, content: updatedContent }));
-          }} 
-        />
-        {errors.content && (
-          <span className="text-sm text-red-500">{errors.content}</span>
-        )}
+        {/* Markdown Input and Preview */}
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Input */}
+          <div className="w-full md:w-1/2">
+            <label
+              htmlFor="content"
+              className="text-base sm:text-lg font-medium"
+            >
+              Blog Content
+            </label>
+            <textarea
+              id="content"
+              value={formData.content}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, content: e.target.value }))
+              }
+              placeholder="Write your blog content using Markdown..."
+              className="w-full min-h-[200px] sm:min-h-[300px] p-3 border rounded-md"
+              disabled={isLoading}
+            />
+            {errors.content && (
+              <span className="text-sm text-red-500">{errors.content}</span>
+            )}
+          </div>
+
+          {/* Markdown Preview */}
+          <div className="w-full md:w-1/2">
+            <label
+              htmlFor="preview"
+              className="text-base sm:text-lg font-medium"
+            >
+              Markdown Preview
+            </label>
+            <div
+              id="preview"
+              className="w-full min-h-[200px] sm:min-h-[300px] p-3 border rounded-md bg-gray-50 prose max-w-none"
+            >
+              <ReactMarkdown>{formData.content || "Start typing..."}</ReactMarkdown>
+            </div>
+          </div>
+        </div>
 
         {/* Submit Buttons */}
         <div className="flex flex-col sm:flex-row gap-3">
