@@ -1,9 +1,8 @@
-// src/app/api/posts/[id]/views.ts
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { NextResponse } from "next/server";
 
 export async function POST(
-  _req: Request,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -14,8 +13,9 @@ export async function POST(
 
     return NextResponse.json({ success: true, views: post.views });
   } catch (error) {
+    console.error("Error updating views:", error);
     return NextResponse.json(
-      { success: false, error: (error as Error).message },
+      { success: false, error: "Failed to update views" },
       { status: 500 }
     );
   }

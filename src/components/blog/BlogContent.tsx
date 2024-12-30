@@ -68,6 +68,9 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
       try {
         const response = await fetch(`/api/posts/${post.id}/views`, {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
   
         if (!response.ok) {
@@ -76,7 +79,10 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
   
         const data = await response.json();
         if (data.success) {
-          setViews((prev) => prev + 1);
+          // I can use either approach:
+          setViews((prev) => prev + 1);  // Client-side increment for faster UI response
+          // OR
+          // setViews(data.views);       // Server value guarnteed accuracy
         }
       } catch (error) {
         console.error("Error incrementing views:", error);
@@ -87,32 +93,39 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
   }, [post.id]);
 
 // Like functionality
-  const toggleLike = async () => {
-    try {
-      const response = await fetch(`/api/posts/${post.id}/likes`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: post.id,
-          action: liked ? "unlike" : "like",
-        }),
-      });
+const toggleLike = async () => {
+  try {
+    const response = await fetch(`/api/posts/${post.id}/likes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: liked ? "unlike" : "like",
+      }),
+    });
 
-      if (!response.ok) throw new Error("Failed to toggle like");
-
-      setLikes((prev) => (liked ? prev - 1 : prev + 1));
-      setLiked(!liked);
-    } catch (error) {
-      console.error("Error toggling like:", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update like status",
-      });
+    if (!response.ok) {
+      throw new Error("Failed to toggle like");
     }
-  };
+
+    const data = await response.json();
+    if (data.success) {
+      // I can use either approach:
+      setLikes((prev) => (liked ? prev - 1 : prev + 1));  // Client-side calculation
+      // OR
+      // setLikes(data.likes);                            // Server value
+      setLiked(!liked);
+    }
+  } catch (error) {
+    console.error("Error toggling like:", error);
+    toast({
+      variant: "destructive",
+      title: "Error",
+      description: "Failed to update like status",
+    });
+  }
+};
 
   return (
     <motion.article 
