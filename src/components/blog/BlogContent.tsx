@@ -19,7 +19,6 @@ interface BlogContentProps {
     title: string;
     content: string;
     createdAt: Date;
-
     author: {
       name: string;
       image: string;
@@ -63,24 +62,57 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
     }
   };
 
-    // Increment views on page load
-    useEffect(() => {
-      fetch(`/api/posts/${post.id}/views`, { method: "POST" }).then(() => setViews((prev) => prev + 1));
-    }, [post.id]);
+  // Increment views on page load
+  useEffect(() => {
+    const incrementViews = async () => {
+      try {
+        const response = await fetch(`/api/posts/${post.id}/views`, {
+          method: "POST",
+        });
   
-    const toggleLike = async () => {
-      const action = liked ? "unlike" : "like";
-      const res = await fetch(`/api/posts/[id]/likes`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action }),
-      });
+        if (!response.ok) {
+          throw new Error("Failed to increment views");
+        }
   
-      if (res.ok) {
-        setLikes((prev) => (liked ? prev - 1 : prev + 1));
-        setLiked(!liked);
+        const data = await response.json();
+        if (data.success) {
+          setViews((prev) => prev + 1);
+        }
+      } catch (error) {
+        console.error("Error incrementing views:", error);
       }
     };
+  
+    incrementViews();
+  }, [post.id]);
+
+// Like functionality
+  const toggleLike = async () => {
+    try {
+      const response = await fetch(`/api/posts/${post.id}/likes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: post.id,
+          action: liked ? "unlike" : "like",
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to toggle like");
+
+      setLikes((prev) => (liked ? prev - 1 : prev + 1));
+      setLiked(!liked);
+    } catch (error) {
+      console.error("Error toggling like:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update like status",
+      });
+    }
+  };
 
   return (
     <motion.article 
@@ -105,8 +137,8 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
         </div>
       </div>
 
-      <div className="prose max-w-none mb-8">
-      <ReactMarkdown>{post.content}</ReactMarkdown>
+      <div className="prose max-w-none mb-8 whitespace-pre-wrap">
+        <ReactMarkdown>{post.content}</ReactMarkdown>
       </div>
 
       <div className="meta flex items-center gap-4 mt-4">
@@ -118,7 +150,7 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
       </div>
 
       {session && (
-        <div className="flex gap-4">
+        <div className="flex gap-4 mt-4">
           <Button variant="outline" asChild>
             <Link href={`/admin/edit/${post.id}`}>Edit Post</Link>
           </Button>
@@ -129,5 +161,4 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
       )}
     </motion.article>
   );
-
 }
