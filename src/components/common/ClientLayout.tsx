@@ -21,12 +21,12 @@ useEffect(() => {
       window.alert('🔓 Admin Mode Activated!')
       setShowAuth(true)
     }
-    // Alternative combination using just Alt + A
+    // Alternative combination using just Alt + 
     if (e.altKey && (e.key === 'a' || e.key === 'A')) {
       window.alert('🔓 Admin Mode Activated!')
       setShowAuth(true)
     }
-    // To deactivate press Esc + Alt
+    // To deactivate press Esc + Shift
     if (e.key === 'Escape' && e.shiftKey) {
       window.alert('🔒 Admin Mode Deactivated!')
       setShowAuth(false)
