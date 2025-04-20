@@ -53,7 +53,7 @@ export default async function HomePage() {
           <div className="text-center">
             <SlideUp>
               <h1 className="text-6xl font-bold mb-4">Welcome to My Blog</h1>
-              <p className="text-xl text-gray-600 mb-8">Sharing thoughts and experiences</p>
+              <p className="text-xl text-gray-600 mb-8">Not your typical technical blogpost just sharing my thoughts on tech and life.</p>
             </SlideUp>
             <Button asChild>
               <Link href="/blogs">View All Posts</Link>

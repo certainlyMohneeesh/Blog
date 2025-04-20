@@ -32,7 +32,7 @@ export default function Header() {
         <nav className="flex flex-col md:flex-row justify-between items-center py-4">
           <div className="w-full md:w-auto mb-4 md:mb-0">
             <Link href="/" className="font-bold text-xl">
-              Cyth Blog
+              CythBlog
             </Link>
           </div>
 

@@ -17,7 +17,7 @@ model Post {
   published Boolean  @default(true)
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String   @db.ObjectId
-  featured  Boolean  @default(false)
+  featured  Boolean  @default(false) 
   views     Int      @default(0) 
   likes     Int      @default(0) 
 }
