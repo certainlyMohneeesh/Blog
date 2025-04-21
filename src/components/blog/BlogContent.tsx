@@ -74,7 +74,14 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
         if (!response.ok) throw new Error("Failed to increment views");
         const data = await response.json();
         if (data.success) {
-          setViews((prev) => prev + 1); // Optionally: setViews(data.views);
+          // After incrementing, fetch the updated count from the server
+          const getRes = await fetch(`/api/blog/${post.id}`);
+          if (getRes.ok) {
+            const getData = await getRes.json();
+            if (getData.post && typeof getData.post.views === 'number') {
+              setViews(getData.post.views);
+            }
+          }
         }
       } catch (error) {
         console.error("Error incrementing views:", error);
