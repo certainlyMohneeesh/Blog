@@ -16,7 +16,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <motion.main 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
             className="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-8"
           >

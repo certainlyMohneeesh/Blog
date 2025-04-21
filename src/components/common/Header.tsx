@@ -5,12 +5,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useAuthStore } from '@/store/authStore'
 
 export default function Header() {
   const { data: session } = useSession();
   const [scrolled, setScrolled] = useState(false);
-  const showAuth = useAuthStore((state) => state.showAuth)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,9 +39,9 @@ export default function Header() {
               <Link href="/blogs">All Posts</Link>
             </Button>
              
-        {(session || showAuth) && (
+        {session?.user && (
           <>
-            {session ? (
+            {(session?.user as any).role === "admin" && (
               <div className="flex flex-row gap-2">
                 <Button variant="outline" asChild size="sm">
                   <Link href="/admin/new">New Post</Link>
@@ -52,10 +50,6 @@ export default function Header() {
                   Sign Out
                 </Button>
               </div>
-            ) : (
-              <Button size="sm" onClick={() => signIn()}>
-                Sign In
-              </Button>
             )}
             </>
           )}
