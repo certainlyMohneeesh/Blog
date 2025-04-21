@@ -14,8 +14,10 @@ export const authOptions: NextAuthOptions = {
     async signIn({ profile }) {
       const githubProfile = profile as GitHubProfile;
       const adminUsers = (process.env.ALLOWED_GITHUB_USERS || '').split(',').map(u => u.trim().toLowerCase());
-      console.log('GitHub login:', githubProfile.login, 'email:', githubProfile.email, 'admins:', adminUsers);
       const isAdmin = adminUsers.includes((githubProfile.login || '').toLowerCase()) || adminUsers.includes((githubProfile.email || '').toLowerCase());
+      // logging
+      console.log('GitHub login:', githubProfile.login, 'email:', githubProfile.email, 'admins:', adminUsers, 'isAdmin:', isAdmin);
+
       if (!isAdmin) {
         return false;
       }

@@ -29,3 +29,15 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   await prisma.post.update({ where: { id: postId }, data: { likes } });
   return NextResponse.json({ success: true, likes });
 }
+
+export function GET() {
+  return new NextResponse('Method Not Allowed', { status: 405 });
+}
+
+export function PUT() {
+  return new NextResponse('Method Not Allowed', { status: 405 });
+}
+
+export function DELETE() {
+  return new NextResponse('Method Not Allowed', { status: 405 });
+}

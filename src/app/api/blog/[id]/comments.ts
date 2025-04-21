@@ -3,16 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]/route';
 import prisma from '@/lib/db';
 
-// Get comments for a post
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const postId = params.id;
-  const comments = await prisma.comment.findMany({
-    where: { postId },
-    include: { user: true },
-    orderBy: { createdAt: 'asc' },
-  });
-  return NextResponse.json({ comments });
-}
+// Only allow POST for adding comments. All other methods return 405.
 
 // Add a comment to a post
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
@@ -34,4 +25,16 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     include: { user: true },
   });
   return NextResponse.json({ success: true, comment });
+}
+
+export function GET() {
+  return new NextResponse('Method Not Allowed', { status: 405 });
+}
+
+export function PUT() {
+  return new NextResponse('Method Not Allowed', { status: 405 });
+}
+
+export function DELETE() {
+  return new NextResponse('Method Not Allowed', { status: 405 });
 }
