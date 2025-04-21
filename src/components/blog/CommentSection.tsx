@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 interface Comment {
   id: string;
@@ -19,26 +20,41 @@ export default function CommentSection({ postId }: { postId: string }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetch(`/api/blog/${postId}/comments`)
       .then(res => res.json())
-      .then(data => setComments(data.comments));
-  }, [postId]);
+      .then(data => {
+        if (data.comments) setComments(data.comments);
+        else if (data.error) toast({ variant: 'destructive', title: 'Error', description: data.error });
+      })
+      .catch(() => {
+        toast({ variant: 'destructive', title: 'Error', description: 'Failed to load comments.' });
+      });
+  }, [postId, toast]);
 
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim()) return;
     setLoading(true);
-    const res = await fetch(`/api/blog/${postId}/comments`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: newComment }),
-    });
-    const data = await res.json();
-    if (data.success) {
-      setComments((prev) => [...prev, data.comment]);
-      setNewComment('');
+    try {
+      const res = await fetch(`/api/blog/${postId}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: newComment }),
+      });
+      const data = await res.json();
+      if (data.success && data.comment) {
+        setComments((prev) => [...prev, data.comment]);
+        setNewComment('');
+      } else if (data.error) {
+        toast({ variant: 'destructive', title: 'Error', description: data.error });
+      } else {
+        toast({ variant: 'destructive', title: 'Error', description: 'Failed to add comment.' });
+      }
+    } catch {
+      toast({ variant: 'destructive', title: 'Error', description: 'Failed to add comment.' });
     }
     setLoading(false);
   };

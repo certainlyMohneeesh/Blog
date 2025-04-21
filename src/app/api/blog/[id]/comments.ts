@@ -6,9 +6,14 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 // GET handler: fetch comments for a post
 export async function GET(req: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse> {
   const postId = params.id;
+  const post = await prisma.post.findUnique({ where: { id: postId } });
+  if (!post) {
+    return NextResponse.json({ error: 'Post not found', comments: [] }, { status: 404 });
+  }
   const comments = await prisma.comment.findMany({
     where: { postId },
     orderBy: { createdAt: 'desc' },
+    include: { user: true },
   });
   return NextResponse.json({ comments });
 }
@@ -24,6 +29,10 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     return NextResponse.json({ error: 'User not found' }, { status: 404 });
   }
   const postId = params.id;
+  const post = await prisma.post.findUnique({ where: { id: postId } });
+  if (!post) {
+    return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+  }
   const { content } = await req.json();
   const comment = await prisma.comment.create({
     data: {
@@ -31,6 +40,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       user: { connect: { id: user.id } },
       post: { connect: { id: postId } },
     },
+    include: { user: true },
   });
-  return NextResponse.json({ comment });
+  return NextResponse.json({ success: true, comment });
 }
