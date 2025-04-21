@@ -35,28 +35,35 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
 
   const handleDelete = async () => {
     const confirmed = window.confirm("Are you sure you want to delete this post?");
-    
     if (!confirmed) return;
-
     try {
       const response = await fetch(`/api/blog/delete/${post.id}`, {
         method: "DELETE",
       });
-
-      if (!response.ok) throw new Error("Failed to delete post");
-
+      const data = await response.json();
+      if (!response.ok) {
+        if (data && data.message === "Forbidden: Admins only") {
+          toast({
+            variant: "destructive",
+            title: "Forbidden",
+            description: "Admins only",
+          });
+        } else {
+          throw new Error(data?.message || "Failed to delete post");
+        }
+        return;
+      }
       toast({
         title: "Success",
         description: "Blog post deleted successfully",
       });
-      
       router.push("/blogs");
       router.refresh();
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to delete post",
+        description: error instanceof Error ? error.message : "Failed to delete post",
       });
     }
   };
@@ -118,7 +125,7 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
     }
   };
 
-  // Fetch like state on mount
+  // Fetch like status on mount
   useEffect(() => {
     const fetchLikeStatus = async () => {
       if (!session?.user) return;

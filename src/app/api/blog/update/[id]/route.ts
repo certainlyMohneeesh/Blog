@@ -18,6 +18,13 @@ export async function PUT(
       );
     }
 
+    if ((session.user as any).role !== 'admin') {
+      return NextResponse.json(
+        { message: "Forbidden: Admins only" },
+        { status: 403 }
+      );
+    }
+
     const { title, content } = await request.json();
     if (!title || !content) {
       return NextResponse.json(

@@ -17,10 +17,7 @@ export const authOptions: NextAuthOptions = {
       const isAdmin = adminUsers.includes((githubProfile.login || '').toLowerCase()) || adminUsers.includes((githubProfile.email || '').toLowerCase());
       // logging
       console.log('GitHub login:', githubProfile.login, 'email:', githubProfile.email, 'admins:', adminUsers, 'isAdmin:', isAdmin);
-
-      if (!isAdmin) {
-        return false;
-      }
+      // Allow ALL users to sign in
       if (!githubProfile.email) {
         return false;
       }

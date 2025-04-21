@@ -15,6 +15,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if ((session.user as any).role !== 'admin') {
+      return NextResponse.json(
+        { message: "Forbidden: Admins only" },
+        { status: 403 }
+      );
+    }
+
     // First ensure the user exists
     let user = await prisma.user.findUnique({
       where: { email: session.user.email }
@@ -26,7 +33,8 @@ export async function POST(request: Request) {
         data: {
           email: session.user.email,
           name: session.user.name || 'Anonymous',
-          image: session.user.image || ''
+          image: session.user.image || '',
+          role: 'admin',
         }
       });
     }
