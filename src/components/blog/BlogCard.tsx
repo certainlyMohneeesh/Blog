@@ -30,12 +30,23 @@ export default function BlogCard({ post, views: initialViews, likes: initialLike
 
   useEffect(() => {
     fetch(`/api/blog/${post.id}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.post) {
+      .then(res => {
+        if (!res.ok) {
+          console.error(`Failed to fetch post data for id ${post.id}:`, res.status, res.statusText);
+          return undefined;
+        }
+        return res.json();
+      })
+      .then((data: any) => {
+        if (data && data.post) {
           if (typeof data.post.views === 'number') setViews(data.post.views);
           if (typeof data.post.likes === 'number') setLikes(data.post.likes);
+        } else if (data && data.error) {
+          console.error(`API error for post id ${post.id}:`, data.error);
         }
+      })
+      .catch(error => {
+        console.error(`Network or parsing error for post id ${post.id}:`, error);
       });
   }, [post.id]);
 
