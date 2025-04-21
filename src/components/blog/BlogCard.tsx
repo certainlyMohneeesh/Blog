@@ -7,7 +7,7 @@ import { FadeIn } from "@/components/animations/FadeIn";
 import { motion } from "framer-motion";
 import { ThumbsUp } from "lucide-react";
 import stripMarkdown from "@/utils/stripMarkdown";
-
+import React, { useEffect, useState } from "react";
 
 interface BlogCardProps {
   views: number;
@@ -24,7 +24,21 @@ interface BlogCardProps {
   };
 }
 
-export default function BlogCard({ post, views, likes }: BlogCardProps) {
+export default function BlogCard({ post, views: initialViews, likes: initialLikes }: BlogCardProps) {
+  const [views, setViews] = useState(initialViews);
+  const [likes, setLikes] = useState(initialLikes);
+
+  useEffect(() => {
+    fetch(`/api/blog/${post.id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.post) {
+          if (typeof data.post.views === 'number') setViews(data.post.views);
+          if (typeof data.post.likes === 'number') setLikes(data.post.likes);
+        }
+      });
+  }, [post.id]);
+
   return (
     <div className="w-full p-2 sm:p-4">
       <motion.div className="h-full rounded-lg shadow-md hover:shadow-xl transition-shadow">
