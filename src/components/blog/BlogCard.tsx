@@ -6,7 +6,8 @@ import Link from "next/link";
 import { FadeIn } from "@/components/animations/FadeIn";
 import { motion } from "framer-motion";
 import { ThumbsUp } from "lucide-react";
-import Editor from "../editor/editor";
+import stripMarkdown from "@/utils/stripMarkdown";
+
 
 interface BlogCardProps {
   views: number;
@@ -44,7 +45,7 @@ export default function BlogCard({ post, views, likes }: BlogCardProps) {
               </div>
               <h2 className="text-xl sm:text-2xl font-bold mb-3">{post.title}</h2>
               <p className="text-sm sm:text-base text-gray-600 mb-4">
-                {post.content.substring(0, 150)}...
+              {stripMarkdown(post.content).substring(0, 150)}...
               </p>
             </div>
 
