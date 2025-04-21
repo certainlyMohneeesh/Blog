@@ -1,49 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
 import prisma from '@/lib/db';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
-// Only allow GET for fetching comments and POST for adding comments. All other methods return 405.
-
-// Get comments for a post
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+// GET handler: fetch comments for a post
+export async function GET(req: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse> {
   const postId = params.id;
   const comments = await prisma.comment.findMany({
     where: { postId },
-    include: { user: true },
-    orderBy: { createdAt: 'asc' },
+    orderBy: { createdAt: 'desc' },
   });
   return NextResponse.json({ comments });
 }
 
-// Add a comment to a post
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
-  const postId = params.id;
+// POST handler: add a comment to a post
+export async function POST(req: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
-  if (!session || !session.user) {
+  if (!session?.user?.email) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  // Find user by email to get userId
-  const user = await prisma.user.findUnique({ where: { email: session.user.email ?? undefined } });
+  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
   if (!user) {
     return NextResponse.json({ error: 'User not found' }, { status: 404 });
   }
+  const postId = params.id;
   const { content } = await req.json();
   const comment = await prisma.comment.create({
     data: {
       content,
-      postId,
-      userId: user.id,
+      user: { connect: { id: user.id } },
+      post: { connect: { id: postId } },
     },
-    include: { user: true },
   });
-  return NextResponse.json({ success: true, comment });
-}
-
-export function PUT() {
-  return new NextResponse('Method Not Allowed', { status: 405 });
-}
-
-export function DELETE() {
-  return new NextResponse('Method Not Allowed', { status: 405 });
+  return NextResponse.json({ comment });
 }

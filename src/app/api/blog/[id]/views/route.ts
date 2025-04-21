@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 
 // Increment view count for a post (server-side only)
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse> {
   const postId = params.id;
   // Optionally, you can use cookies/session/IP to avoid double-counting views per user/session
   await prisma.post.update({
@@ -12,6 +12,6 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   return NextResponse.json({ success: true });
 }
 
-export function GET() {
+export function GET(): Response {
   return new Response('Method Not Allowed', { status: 405 });
 }

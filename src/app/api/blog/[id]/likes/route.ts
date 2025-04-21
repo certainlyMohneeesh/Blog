@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prisma from '@/lib/db';
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse> {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -15,7 +15,6 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const postId = params.id;
   const { action } = await req.json();
   if (action === 'like') {
-    // Upsert like
     await prisma.like.upsert({
       where: { userId_postId: { userId: user.id, postId } },
       update: {},
@@ -24,20 +23,19 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   } else if (action === 'unlike') {
     await prisma.like.deleteMany({ where: { userId: user.id, postId } });
   }
-  // Update likes count
   const likes = await prisma.like.count({ where: { postId } });
   await prisma.post.update({ where: { id: postId }, data: { likes } });
   return NextResponse.json({ success: true, likes });
 }
 
-export function GET() {
+export function GET(): NextResponse {
   return new NextResponse('Method Not Allowed', { status: 405 });
 }
 
-export function PUT() {
+export function PUT(): NextResponse {
   return new NextResponse('Method Not Allowed', { status: 405 });
 }
 
-export function DELETE() {
+export function DELETE(): NextResponse {
   return new NextResponse('Method Not Allowed', { status: 405 });
 }

@@ -14,6 +14,7 @@ describe('GET /api/blog/[id]', () => {
         name: 'Test User',
       },
     });
+
     // Arrange: Create a test post
     const testPost = await prisma.post.create({
       data: {
