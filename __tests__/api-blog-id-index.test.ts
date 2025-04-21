@@ -1,4 +1,4 @@
-import { GET } from '../src/app/api/blog/[id]/index';
+import { GET } from '../src/app/api/blog/[id]/route';
 import prisma from '../src/lib/db';
 
 describe('GET /api/blog/[id]', () => {
