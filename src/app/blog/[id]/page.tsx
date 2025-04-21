@@ -2,11 +2,8 @@ import prisma from "@/lib/db";
 import BlogContent from "@/components/blog/BlogContent";
 import { notFound } from "next/navigation";
 
-export default async function BlogPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function BlogPage(props: { params: { id: string } }) {
+  const { params } = await Promise.resolve(props);
   if (!params.id) {
     notFound();
   }

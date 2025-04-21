@@ -12,6 +12,6 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   return NextResponse.json({ success: true });
 }
 
-export function GET(): Response {
-  return new Response('Method Not Allowed', { status: 405 });
+export function GET(): NextResponse {
+  return new NextResponse('Method Not Allowed', { status: 405 });
 }
