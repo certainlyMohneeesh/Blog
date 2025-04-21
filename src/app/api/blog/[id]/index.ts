@@ -5,6 +5,7 @@ import prisma from '@/lib/db';
 
 // Get a single blog post (public)
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+  
   const postId = params.id;
   const post = await prisma.post.findUnique({
     where: { id: postId },
