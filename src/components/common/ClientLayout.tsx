@@ -5,9 +5,11 @@ import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/ui/toaster";
-import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
+  const { data: session } = useSession();
+
   return (
     <SessionProvider>
       <div className="min-h-screen flex flex-col">

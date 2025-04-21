@@ -1,10 +1,10 @@
 "use client";
 
-import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function Header() {
   const { data: session } = useSession();
@@ -38,21 +38,18 @@ export default function Header() {
             <Button variant="ghost" asChild size="sm">
               <Link href="/blogs">All Posts</Link>
             </Button>
-             
-        {session?.user && (
-          <>
-            {(session?.user as any).role === "admin" && (
-              <div className="flex flex-row gap-2">
-                <Button variant="outline" asChild size="sm">
-                  <Link href="/admin/new">New Post</Link>
-                </Button>
-                <Button size="sm" onClick={() => signOut()}>
-                  Sign Out
-                </Button>
-              </div>
+            {session?.user ? (
+              <>
+                {(session.user as any).role === "admin" && (
+                  <Button variant="outline" asChild size="sm">
+                    <Link href="/admin/new">New Post</Link>
+                  </Button>
+                )}
+                <Button size="sm" onClick={() => signOut()}>Sign Out</Button>
+              </>
+            ) : (
+              <Button size="sm" onClick={() => signIn()}>Sign In</Button>
             )}
-            </>
-          )}
           </div>
         </nav>
       </div>
