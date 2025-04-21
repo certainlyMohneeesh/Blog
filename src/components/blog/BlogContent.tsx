@@ -8,8 +8,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { ThumbsUp } from "lucide-react";
 import { useEffect, useState } from "react";
-// import Editor from "../editor/editor";
-// import { defaultEditorExtensions } from "@/components/editor/editor"; 
+import CommentSection from "./CommentSection";
 
 interface BlogContentProps {
   views: number;
@@ -66,66 +65,65 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
   useEffect(() => {
     const incrementViews = async () => {
       try {
-        const response = await fetch(`/api/posts/${post.id}/views`, {
+        const response = await fetch(`/api/blog/${post.id}/views`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
         });
-  
-        if (!response.ok) {
-          throw new Error("Failed to increment views");
-        }
-  
+        if (!response.ok) throw new Error("Failed to increment views");
         const data = await response.json();
         if (data.success) {
-          // I can use either approach:
-          setViews((prev) => prev + 1);  // Client-side increment for faster UI response
-          // OR
-          // setViews(data.views);       // Server value guarnteed accuracy
+          setViews((prev) => prev + 1); // Optionally: setViews(data.views);
         }
       } catch (error) {
         console.error("Error incrementing views:", error);
       }
     };
-  
     incrementViews();
   }, [post.id]);
 
-// Like functionality
-const toggleLike = async () => {
-  try {
-    const response = await fetch(`/api/posts/${post.id}/likes`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        action: liked ? "unlike" : "like",
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to toggle like");
+  // Like functionality
+  const toggleLike = async () => {
+    try {
+      const response = await fetch(`/api/blog/${post.id}/likes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: liked ? "unlike" : "like",
+        }),
+      });
+      if (!response.ok) throw new Error("Failed to toggle like");
+      const data = await response.json();
+      if (data.success) {
+        setLikes(data.likes); // Use server value for accuracy
+        setLiked(!liked);
+      }
+    } catch (error) {
+      console.error("Error toggling like:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update like status",
+      });
     }
+  };
 
-    const data = await response.json();
-    if (data.success) {
-      // I can use either approach:
-      setLikes((prev) => (liked ? prev - 1 : prev + 1));  // Client-side calculation
-      // OR
-      // setLikes(data.likes);                            // Server value
-      setLiked(!liked);
-    }
-  } catch (error) {
-    console.error("Error toggling like:", error);
-    toast({
-      variant: "destructive",
-      title: "Error",
-      description: "Failed to update like status",
-    });
-  }
-};
+  // Fetch like state on mount
+  useEffect(() => {
+    const fetchLikeStatus = async () => {
+      if (!session?.user) return;
+      const res = await fetch(`/api/blog/${post.id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setLikes(data.post.likes);
+        setLiked(data.post.likedByCurrentUser || false);
+      }
+    };
+    fetchLikeStatus();
+  }, [post.id, session?.user]);
 
   return (
     <motion.article 
@@ -149,20 +147,24 @@ const toggleLike = async () => {
           <time>{new Date(post.createdAt).toLocaleDateString()}</time>
         </div>
       </div>
-
       <div className="prose max-w-none mb-8 whitespace-pre-wrap">
         <ReactMarkdown>{post.content}</ReactMarkdown>
       </div>
-
       <div className="meta flex items-center gap-4 mt-4">
         <span>{views} views</span>
-        <Button onClick={toggleLike} variant="outline" size="sm">
-          <ThumbsUp className={`mr-2 ${liked ? "text-blue-500" : ""}`} />
-          {liked ? "Unlike" : "Like"} ({likes})
-        </Button>
+        {session?.user ? (
+          <Button onClick={toggleLike} variant="outline" size="sm">
+            <ThumbsUp className={`mr-2 ${liked ? "text-blue-500" : ""}`} />
+            {liked ? "Unlike" : "Like"} ({likes})
+          </Button>
+        ) : (
+          <span className="text-muted-foreground">Sign in to like</span>
+        )}
       </div>
-
-      {session && (
+      <div className="mt-8">
+        <CommentSection postId={post.id} />
+      </div>
+      {session?.user && (session.user as any).role === "admin" && (
         <div className="flex gap-4 mt-4">
           <Button variant="outline" asChild>
             <Link href={`/admin/edit/${post.id}`}>Edit Post</Link>

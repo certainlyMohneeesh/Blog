@@ -13,33 +13,36 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ profile }) {
       const githubProfile = profile as GitHubProfile;
-      
-      if (githubProfile.login !== process.env.ALLOWED_GITHUB_USER) {
+      const adminUsers = (process.env.ALLOWED_GITHUB_USERS || '').split(',').map(u => u.trim().toLowerCase());
+      const isAdmin = adminUsers.includes((githubProfile.login || '').toLowerCase()) || adminUsers.includes((githubProfile.email || '').toLowerCase());
+      if (!isAdmin) {
         return false;
       }
-
       if (!githubProfile.email) {
         return false;
       }
-
-      const dbUser = await prisma.user.upsert({
+      await prisma.user.upsert({
         where: { email: githubProfile.email },
         create: {
           email: githubProfile.email,
           name: githubProfile.name || githubProfile.login,
-          image: githubProfile.avatar_url
+          image: githubProfile.avatar_url,
+          role: isAdmin ? 'admin' : 'user',
         },
         update: {
           name: githubProfile.name || githubProfile.login,
-          image: githubProfile.avatar_url
+          image: githubProfile.avatar_url,
+          role: isAdmin ? 'admin' : 'user',
         }
       });
-
       return true;
     },
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).id = token.sub;
+        // Fetch role from DB and attach to session
+        const dbUser = await prisma.user.findUnique({ where: { email: session.user.email! } });
+        (session.user as any).role = dbUser?.role || 'user';
       }
       return session;
     }
