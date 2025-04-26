@@ -28,6 +28,9 @@ export async function DELETE(
     if (!post) {
       return NextResponse.json({ message: "Post not found" }, { status: 404 });
     }
+    // Cascade delete related Likes and Comments
+    await prisma.like.deleteMany({ where: { postId: id } });
+    await prisma.comment.deleteMany({ where: { postId: id } });
     // Try to delete the post
     try {
       await prisma.post.delete({ where: { id } });
@@ -36,9 +39,9 @@ export async function DELETE(
         message: "Post deleted successfully",
       });
     } catch (deleteError) {
-      console.error("Error deleting post (possible related records):", deleteError);
+      console.error("Error deleting post (unexpected):", deleteError);
       return NextResponse.json(
-        { message: "Failed to delete post. There may be related records (comments, likes, etc.) preventing deletion." },
+        { message: "Failed to delete post (unexpected error)" },
         { status: 500 }
       );
     }
