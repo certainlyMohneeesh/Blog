@@ -16,6 +16,7 @@
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.2",
+    "@tailwindcss/typography": "^0.5.16",
     "@tiptap/extension-bullet-list": "^2.10.3",
     "@tiptap/extension-code-block-lowlight": "^2.10.2",
     "@tiptap/extension-image": "^2.10.2",
