@@ -19,7 +19,12 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { BlogFormProps } from "@/types";
-import ReactMarkdown from "react-markdown";
+import dynamic from "next/dynamic";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
+import MarkdownPreview from "@uiw/react-markdown-preview";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 export default function BlogForm({ initialData, isEditing }: BlogFormProps) {
   const router = useRouter();
@@ -123,15 +128,17 @@ export default function BlogForm({ initialData, isEditing }: BlogFormProps) {
               <label htmlFor="content" className="text-base sm:text-lg font-medium">
                 Blog Content
               </label>
-              <textarea
+              <MDEditor
                 id="content"
                 value={formData.content}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, content: e.target.value }))
-                }
-                placeholder="Write your blog content using Markdown..."
-                className="w-full min-h-[200px] sm:min-h-[300px] p-3 border rounded-md font-mono"
-                disabled={isLoading}
+                onChange={(value) => setFormData((prev) => ({ ...prev, content: value || "" }))}
+                preview="edit"
+                height={300}
+                textareaProps={{
+                  placeholder: "Write your blog content using Markdown...",
+                  disabled: isLoading,
+                  required: true,
+                }}
               />
               {errors.content && (
                 <span className="text-sm text-red-500">{errors.content}</span>
@@ -142,11 +149,8 @@ export default function BlogForm({ initialData, isEditing }: BlogFormProps) {
               <label htmlFor="preview" className="text-base sm:text-lg font-medium">
                 Markdown Preview
               </label>
-              <div
-                id="preview"
-                className="w-full min-h-[200px] sm:min-h-[300px] p-3 border rounded-md bg-gray-50 prose max-w-none whitespace-pre-wrap"
-              >
-                <ReactMarkdown>{formData.content || "Start typing..."}</ReactMarkdown>
+              <div id="preview" className="w-full min-h-[200px] sm:min-h-[300px] p-3 border rounded-md bg-gray-50 prose max-w-none">
+                <MarkdownPreview source={formData.content || "Start typing..."} />
               </div>
             </div>
           </div>

@@ -23,18 +23,29 @@ export async function DELETE(
     }
     // Access the `id` from the `params` object
     const { id } = params;
-    // Delete the post with the specified ID
-    await prisma.post.delete({
-      where: { id },
-    });
-    return NextResponse.json({
-      success: true,
-      message: "Post deleted successfully",
-    });
+    // Check if post exists
+    const post = await prisma.post.findUnique({ where: { id } });
+    if (!post) {
+      return NextResponse.json({ message: "Post not found" }, { status: 404 });
+    }
+    // Try to delete the post
+    try {
+      await prisma.post.delete({ where: { id } });
+      return NextResponse.json({
+        success: true,
+        message: "Post deleted successfully",
+      });
+    } catch (deleteError) {
+      console.error("Error deleting post (possible related records):", deleteError);
+      return NextResponse.json(
+        { message: "Failed to delete post. There may be related records (comments, likes, etc.) preventing deletion." },
+        { status: 500 }
+      );
+    }
   } catch (error) {
-    console.error("Error deleting post:", error);
+    console.error("Error deleting post (outer):", error);
     return NextResponse.json(
-      { message: "Failed to delete post" },
+      { message: "Failed to delete post (unexpected error)" },
       { status: 500 }
     );
   }

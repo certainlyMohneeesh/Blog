@@ -1,5 +1,6 @@
 "use client";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -161,8 +162,8 @@ export default function BlogContent({ post, views: initialViews, likes: initialL
           <time>{new Date(post.createdAt).toLocaleDateString()}</time>
         </div>
       </div>
-      <div className="prose max-w-none mb-8 whitespace-pre-wrap">
-        <ReactMarkdown>{post.content}</ReactMarkdown>
+      <div className="prose max-w-none dark:prose-invert mt-8">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
       </div>
       <div className="meta flex items-center gap-4 mt-4">
         <span>{views} views</span>
